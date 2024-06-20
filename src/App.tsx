@@ -8,15 +8,38 @@ function App() {
     // Connect to WebSocket server
     const ws = new WebSocket('ws://localhost:8080/ws');
 
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+      ws.send('Hello from client!');
+    }
+
     // Event listener for receiving messages
     ws.onmessage = (event) => {
-      console.log(event.data);
+      console.log('Received:', event.data);
       setMessages(prev => [...prev, event.data as string]);
     };
 
-    // Clean up function to close socket when component unmounts
+    // If there is an error, log it to the console
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // If the connection is closed, log it to the console
+    ws.onclose = (event) => {
+      console.log('WebSocket disconnected:', event.reason);
+    };
+
+    // [TEST] send a message to the server every 5 seconds
+    // const interval = setInterval(() => {
+    //   ws.send('Interval test message from client!');
+    // }, 5000);
+    // console.log('Interval set', interval);
+
     return () => {
-      ws.close();
+      if (ws.readyState === WebSocket.OPEN) {
+        console.log('Closing WebSocket');
+        ws.close();
+      }
     };
   }, []);
 
