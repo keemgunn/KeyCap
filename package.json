@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && vite build",
+    "build-bash": "rm -rf dist && tsc && vite build",
+    "build-windows": "rimraf dist && tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
